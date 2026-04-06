@@ -11,10 +11,12 @@ Draw track images for your sport data (fit files supported) with detailed inform
 ### Install pre-requirements
 ```bash
 pip install -r requirements.txt
+```
 ### Process .fit files, split them into each year folder
 ```bash
 python process.py [folder]
+```
 ### Generate event images & a year image
 ```bash
 python generate.py [year]
-
+```
