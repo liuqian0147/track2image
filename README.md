@@ -8,10 +8,10 @@ Draw track images for your sport data (fit files supported) with detailed inform
 
 ## Usage
 
-* python process.py <folder contained files>
-    ** it will create a "tracks" folder with year name for events
-* python generte.py <year>
-    ** e.g., python generate.py 2025. It will create an output folder to contained the combied image, each event image stored in the "./tracks/<year>/"
-
-
+### Install pre-requirements
+'''pip install -r requirements.txt
+### Process .fit files, split them into each year folder
+''' python process.py [folder]
+### Generate event images & a year image
+''' python generate.py [year]
 
