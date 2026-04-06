@@ -14,7 +14,7 @@ pip install -r requirements.txt
 ```
 ### Process .fit files, split them into each year folder
 ```bash
-python process.py [folder]
+python process.py [fit_folder]
 ```
 ### Generate event images & a year image
 ```bash
