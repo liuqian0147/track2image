@@ -1,0 +1,4 @@
+garmin-fit-sdk==21.188.0
+numpy==2.2.6
+pillow==12.0.0
+pandas==2.3.3
