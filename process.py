@@ -32,7 +32,7 @@ def main ():
 
 	targets = []
 	for f in os.listdir (input_path):
-		name, ext = os.path.splitext (f)
+		_, ext = os.path.splitext (f)
 
 		if ext.lower() == '.fit':
 			targets.append (os.path.join(input_path, f))

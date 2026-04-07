@@ -55,13 +55,7 @@ def gen_track_image (filename): #filename = property file (.txt)
     event_date = p[0]['start_time'].replace(tzinfo=datetime.timezone.utc).astimezone(tz=None)
     output_file = os.path.join(pth, f"{event_date:%Y-%m-%d_%H-%M-%S}.png")
 
-    #if os.path.isfile(output_file): #already generated
-    #    return output_file
-
     sport_name = f"{p[0]['sport']}{('_' + p[0]['sub_sport']) if 'sub_sport' in p[0] else ''}"
-
-    #if sport_name not in ['hiking', 'running_trail', 'hiking_generic']:
-    #    return None
 
     if not os.path.isfile (data_file):
         print (f"{data_file} not found.")
@@ -73,7 +67,7 @@ def gen_track_image (filename): #filename = property file (.txt)
         return None
     
     #clean up data
-    df.dropna(inplace=True)
+    df = df.dropna()
 
     width = img_size[0] - 2 * border
     height = img_size[1] - 2 * border
@@ -229,7 +223,7 @@ def gen_year_image (year):
         #f"{year[:2]}\n{year[-2:]}",
         year,
         font=ImageFont.truetype(default_font, 120), 
-        fill=info_color, #spacing=0,
+        fill=info_color, 
         anchor='mm')
     
     return im
@@ -246,7 +240,7 @@ def main ():
         r = gen_track_image (file)
         if r: 
             targets.append(r[0])
-            if not r[1].month in mm:
+            if r[1].month not in mm:
                 mm.append(r[1].month)
 
     # generate summary image
