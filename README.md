@@ -6,6 +6,8 @@ Draw track images for your sport data (fit files supported) with detailed inform
 
 ![Event Image explained](./images/track_explained.png "track image")
 
+![Summary Image for 2025](./images/2025.png "2025 summary")
+
 ## Usage
 
 ### Install pre-requirements
