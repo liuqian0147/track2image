@@ -13,7 +13,7 @@ Currently support fit files that COROS exported.
 
 Sample summary image for year 2025:
 
-![Summary Image for 2025](./images/2025.png "2025 summary"){ width=70% }
+![Summary Image for 2025](./images/2025.png "2025 summary"){width=60%}
 
 Event image in details:
 
