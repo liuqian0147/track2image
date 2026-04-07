@@ -115,7 +115,7 @@ def gen_track_image (filename): #filename = property file (.txt)
     #############
     distance = p[0]['total_distance']/1000
     total_seconds= p[0]['total_elapsed_time']
-    # 计算各个时间单位
+    # calculate hours, minutes and seconds
     hours, remainder = divmod(total_seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
     event_day = event_date.day
