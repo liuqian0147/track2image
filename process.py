@@ -1,33 +1,30 @@
+from html import parser
 import os, shutil
 from garmin_fit_sdk import Decoder, Stream
 from datetime import datetime, timezone, timedelta
 import numpy as np
 import pandas as pd
-
-input_path = "./coros_history_20250109/"
+import argparse
 
 def pre_process (filename, messages):
-	#print (messages['session_mesgs'])
-	
-	name, ext = os.path.splitext (filename)
+	name, _ = os.path.splitext (filename)
 
 	with open(f'{name}.txt', "wt") as f:
 		f.write (str(messages['session_mesgs']))
-		# data = eval (f.read())
 
 	if 'record_mesgs' in messages:
-		df = pd.DataFrame(columns=['timestamp', 'lat', 'long', 'distance', 'altitude'])
-		for r in messages['record_mesgs']:
-			latitude = r['position_lat'] if 'position_lat' in r else 0
-			longitude = r['position_long'] if 'position_long' in r else 0
-			distance = r['distance'] if 'distance' in r else 0
-			altitude = r['altitude'] if 'altitude' in r else 0
-			df.loc[len(df)] = [r['timestamp'], latitude, longitude, distance, altitude]
-
-		df.sort_values(by='timestamp', inplace=True)
+		df = pd.DataFrame(messages['record_mesgs'])
 		df.to_csv (f"{name}.csv", index=False)
 
 def main ():
+	parser = argparse.ArgumentParser(description='Extract and process fit files.')
+	parser.add_argument('folder', type=str, help='Folder containing fit files to process')
+	args = parser.parse_args()
+	input_path = args.folder
+
+	if not os.path.isdir(input_path):
+		print (f"{input_path} not a folder.")
+		return
 
 	output_path = './tracks/'
 	if not os.path.isdir(output_path):
@@ -42,13 +39,13 @@ def main ():
 		else:
 			print (f"{f} not a fit file, ignore.")
 
-	completed = 0
+	processing = 0
 	for filename in targets:
-		p, f = os.path.split(filename)
+		_, f = os.path.split(filename)
 		
 		stream = Stream.from_file(filename)
 		decoder = Decoder(stream)
-		messages, errors = decoder.read()
+		messages, _ = decoder.read()
 
 		event_date = messages["activity_mesgs"][0]['timestamp'].replace(tzinfo=timezone.utc).astimezone(tz=None)
 
@@ -57,10 +54,10 @@ def main ():
 			os.mkdir (t_dir)
 
 		t_file = os.path.join(t_dir, f)
-		print (f"{completed} / {len(targets)} - {filename}")
+		print (f"{processing + 1} / {len(targets)} - {filename}")
 		if not os.path.isfile(t_file):
 			pre_process (t_file, messages)
-		completed += 1
+		processing += 1
 
 if __name__ == "__main__":
 	main ()

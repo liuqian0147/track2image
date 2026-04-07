@@ -34,13 +34,13 @@ info_color = '#A4AFD4'
 line_color = '#0A0C12'
 altitude_color = '#747D9C'
 
-default_font = "./fonts/NotoSansCJK-Black.ttc"
+default_font = "./fonts/OpenSans-ExtraBold.ttf"
 
 def gen_track_image (filename): #filename = property file (.txt)
 
     property_file = f"{filename}"
     pth, f = os.path.split(filename)
-    name, ext = os.path.splitext(f)
+    name, _ = os.path.splitext(f)
     data_file = os.path.join(pth, f"{name}.csv")    
 
     if not os.path.isfile (property_file):
@@ -53,7 +53,7 @@ def gen_track_image (filename): #filename = property file (.txt)
 
     #convert to local timezone
     event_date = p[0]['start_time'].replace(tzinfo=datetime.timezone.utc).astimezone(tz=None)
-    output_file = os.path.join(pth, f"{event_date}.png")
+    output_file = os.path.join(pth, f"{event_date:%Y-%m-%d_%H-%M-%S}.png")
 
     #if os.path.isfile(output_file): #already generated
     #    return output_file
@@ -68,6 +68,10 @@ def gen_track_image (filename): #filename = property file (.txt)
         return None
 
     df = pd.read_csv (data_file)
+    if 'position_lat' not in df.columns or 'position_long' not in df.columns:
+        print (f"{data_file} has no position data.")
+        return None
+    
     #clean up data
     df.dropna(inplace=True)
 
@@ -81,9 +85,9 @@ def gen_track_image (filename): #filename = property file (.txt)
     # draw altitude lines
     ############
     if sport_name in ['running_trail', 'hiking', 'hiking_generic']:
-        df_al = df.drop(df[(df['distance'] == 0) | (df['altitude'] > 8000) | (df['altitude'] <= 0)].index)
+        df_al = df.dropna(subset=['distance', 'enhanced_altitude']) 
 
-        d_a = [tuple(row) for row in df_al[['distance','altitude']].to_numpy()]
+        d_a = [tuple(row) for row in df_al[['distance','enhanced_altitude']].to_numpy()]
         path = ImagePath.Path (d_a)
         box = path.getbbox() #(xl,yt,xr,yb)
         if (box[2] - box[0] > 0) or (box[3] - box[1] > 0):
@@ -103,10 +107,10 @@ def gen_track_image (filename): #filename = property file (.txt)
             draw.polygon (xy, fill = altitude_color,  width = 1, outline = altitude_color)
 
     #draw track
-    df_track = df.drop(df[(df['long'] == 0) | (df['lat'] == 0)].index)
+    df_track = df.dropna(subset=['position_lat', 'position_long']) 
 
     #load tracks
-    xy = [tuple(row) for row in df_track[['long','lat']].to_numpy()]
+    xy = [tuple(row) for row in df_track[['position_long','position_lat']].to_numpy()]
     path = ImagePath.Path (xy)
     box = path.getbbox() #(xl,yt,xr,yb)
 
@@ -231,7 +235,7 @@ def gen_year_image (year):
     return im
 
 def main ():
-
+    
     parser = argparse.ArgumentParser(description='Generate track images for one year.')
     parser.add_argument('year', type=str, help='Year to generate.')
     args = parser.parse_args()
@@ -244,7 +248,6 @@ def main ():
             targets.append(r[0])
             if not r[1].month in mm:
                 mm.append(r[1].month)
-
 
     # generate summary image
     targets.sort() #target file named by date/time
@@ -261,11 +264,11 @@ def main ():
     months = []
     i = 1
     for f in targets:
-        path, filename = os.path.split(f)
-        x, y = os.path.splitext(filename)
+        _, filename = os.path.split(f)
+        name, _ = os.path.splitext(filename)
 
         #2025-04-28 21:43:17+00:00
-        event_date = datetime.datetime.strptime(x[:-6], "%Y-%m-%d %H:%M:%S")
+        event_date = datetime.datetime.strptime(name, "%Y-%m-%d_%H-%M-%S")
 
         if event_date.month not in months: #gen month image
             months.append (event_date.month)
@@ -291,7 +294,10 @@ def main ():
     #draw frame
     draw.rounded_rectangle(((0, 0), (width*cols, height*rows)), outline=line_color, radius=3.0, width=5)
 
-    dest.save (os.path.join(output_path, f'./{target_year}.png'))
+    if not os.path.isdir(output_path):
+        os.mkdir (output_path)
+    dest.save (target_file := os.path.join(output_path, f"{target_year}.png"))
+    print (f"Summary image generated: {target_file}")
 
 if __name__ == "__main__":
     main ()
