@@ -5,9 +5,11 @@ Draw track images for your sport data (fit files supported) with detailed inform
  * Output: image files (.png) for each event and a combined image for one year
 
 Sample summary image for year 2025:
+
 ![Summary Image for 2025](./images/2025.png "2025 summary")
 
 Event image in details:
+
 ![Event Image explained](./images/track_explained.png "track image")
 
 ## Usage
