@@ -91,8 +91,6 @@ def gen_track_image (filename): #filename = property file (.txt)
             c = -box[0] * a + border
             f = -box[1] * e + height + border #
 
-            #xOut = xIn * a + yIn * b + c
-            #yOut = xIn * d + yIn * e + f
             trans = (a, b, c, d, e, f)
             path.transform(trans)
             xy = path.tolist()
@@ -150,8 +148,6 @@ def gen_track_image (filename): #filename = property file (.txt)
     c = -box[0] * a + border
     f = -box[1] * e + height + border
 
-    #xOut = xIn * a + yIn * b + c
-    #yOut = xIn * d + yIn * e + f
     trans = (a, b, c, d, e, f)
     path.transform(trans)
     
