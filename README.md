@@ -1,12 +1,14 @@
 # track2image
 Draw track images for your sport data (fit files supported) with detailed information. 
 
-**Input**: path to .fit files, for example, "./coros_history_20250109"
-**Output**: image files (.png) for each event and a combined image for one year
+ * Input: path to .fit files, for example, "./coros_history_20250109"
+ * Output: image files (.png) for each event and a combined image for one year
 
-![Event Image explained](./images/track_explained.png "track image")
-
+Sample summary image for year 2025:
 ![Summary Image for 2025](./images/2025.png "2025 summary")
+
+Event image in details:
+![Event Image explained](./images/track_explained.png "track image")
 
 ## Usage
 
