@@ -11,11 +11,16 @@ Currently support fit files that COROS exported.
 4. Extract zip file to a local folder (e.g., ./data)
 5. Follow below instructions (Usage section) to generate your track images
 
-Sample summary image for year 2025:
+
+### Example Images
+
+#### Yearly Summary Image
+The summary image below shows all your running activities for the year 2025. Each colored line represents a single run, mapped to a small thumbnail. The layout arranges all runs chronologically or by month, providing a visual overview of your running history for the year. This image is designed to fit on an A4 page for easy printing and sharing.
 
 ![Summary Image for 2025](./images/2025.png "2025 summary"){width=60%}
 
-Event image in details:
+#### Detailed Event Image
+The event image below illustrates a single running activity in detail. It displays the GPS track of your run, with additional information such as distance, duration, and possibly elevation. Visual markers may highlight the start and end points, and the route is color-coded to indicate different sport type.
 
 ![Event Image explained](./images/track_explained.png "track image")
 
