@@ -39,7 +39,7 @@ track2image/
 ### Example Images
 
 #### Yearly Summary Image
-The summary image below shows all your running activities for the year 2025. Each colored line represents a single run, mapped to a small thumbnail. The layout arranges all runs chronologically or by month, providing a visual overview of your running history for the year. This image is designed to fit on an A4 page for easy printing and sharing.
+The summary image below shows all your running activities for the year 2024. Each colored line represents a single run, mapped to a small thumbnail. The layout arranges all runs chronologically or by month, providing a visual overview of your running history for the year. This image is designed to fit on an A4 page for easy printing and sharing.
 
 ![Summary Image for 2024](./images/2024.png "2024 summary")
 
