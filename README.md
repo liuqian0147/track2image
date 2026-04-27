@@ -41,7 +41,7 @@ track2image/
 #### Yearly Summary Image
 The summary image below shows all your running activities for the year 2025. Each colored line represents a single run, mapped to a small thumbnail. The layout arranges all runs chronologically or by month, providing a visual overview of your running history for the year. This image is designed to fit on an A4 page for easy printing and sharing.
 
-![Summary Image for 2025](./images/2024.png "2024 summary")
+![Summary Image for 2024](./images/2024.png "2024 summary")
 
 #### Detailed Event Image
 The event image below illustrates a single running activity in detail. It displays the GPS track of your run, with additional information such as distance, duration, and possibly elevation. Visual markers may highlight the start and end points, and the route is color-coded to indicate different sport type.
