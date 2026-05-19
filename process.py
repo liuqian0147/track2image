@@ -26,38 +26,47 @@ def pre_process (filename, messages):
 def main ():
 	try:
 		parser = argparse.ArgumentParser(description='Extract and process fit files.')
-		parser.add_argument('folder', type=str, help='Folder containing fit files to process')
+		group = parser.add_mutually_exclusive_group(required=True)
+		group.add_argument('--folder', type=str, help='Folder containing fit files to process')
+		group.add_argument('--file', type=str, help='Path to a single fit file to process')
 		args = parser.parse_args()
-		input_path = args.folder
-
-		if not os.path.isdir(input_path):
-			print (f"Error: {input_path} is not a valid folder. Please provide a directory containing FIT files.")
-			return
 
 		output_path = './tracks/'
 		try:
 			if not os.path.isdir(output_path):
-				os.mkdir (output_path)
+				os.mkdir(output_path)
 		except OSError as e:
 			print(f"Error: Unable to create output directory '{output_path}'. {e}")
 			return
 
 		targets = []
-		try:
-			for f in os.listdir (input_path):
-				_, ext = os.path.splitext (f)
-
-				if ext.lower() == '.fit':
-					targets.append (os.path.join(input_path, f))
-				else:
-					print (f"Warning: {f} is not a FIT file, skipping.")
-		except OSError as e:
-			print(f"Error: Unable to read contents of input folder '{input_path}'. {e}")
-			return
-
-		if not targets:
-			print("No FIT files found in the specified folder. Nothing to process.")
-			return
+		if args.folder:
+			input_path = args.folder
+			if not os.path.isdir(input_path):
+				print(f"Error: {input_path} is not a valid folder. Please provide a directory containing FIT files.")
+				return
+			try:
+				for f in os.listdir(input_path):
+					_, ext = os.path.splitext(f)
+					if ext.lower() == '.fit':
+						targets.append(os.path.join(input_path, f))
+					else:
+						print(f"Warning: {f} is not a FIT file, skipping.")
+			except OSError as e:
+				print(f"Error: Unable to read contents of input folder '{input_path}'. {e}")
+				return
+			if not targets:
+				print("No FIT files found in the specified folder. Nothing to process.")
+				return
+		elif args.file:
+			if not os.path.isfile(args.file):
+				print(f"Error: {args.file} is not a valid file.")
+				return
+			_, ext = os.path.splitext(args.file)
+			if ext.lower() != '.fit':
+				print(f"Error: {args.file} is not a FIT file.")
+				return
+			targets.append(args.file)
 
 		processing = 0
 		for filename in targets:
