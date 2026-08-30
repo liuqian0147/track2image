@@ -58,23 +58,31 @@ pip install -r requirements.txt
 ### 2. Process .fit Files
 Process `.fit` files and organize them into year folders:
 ```bash
-python process.py [fit_folder]
+python process.py --folder ./data
+python process.py --file ./data/example.fit
 ```
 
-- `fit_folder` — Path to folder containing `.fit` files (optional, defaults to `./data`)
-- Processed data is saved to `./tracks/YYYY/` folders
+#### Arguments
+| Argument | Description | Required |
+|----------|-------------|----------|
+| `--folder` | Folder containing `.fit` files to process | Exactly one of `--folder` or `--file` |
+| `--file` | Path to a single `.fit` file to process | Exactly one of `--folder` or `--file` |
+
+- `--folder` processes every `.fit` file in the given directory
+- `--file` processes a single `.fit` file
+- Processed data is saved to `./tracks/YYYY/` folders (organized by activity year)
 
 ### 3. Generate Track Images
 Generate event images and yearly summary:
 ```bash
-python generate.py [year] [--style STYLE]
+python generate.py YEAR [--style STYLE]
 ```
 
 #### Arguments
 | Argument | Description | Required |
 |----------|-------------|----------|
 | `year` | Year to generate (e.g., `2025`) | Yes |
-| `--style` | Color style to use | No (default: `default`) |
+| `--style` | Color style to use (`default`, `original`, `minimal`, `light`, `nature`, `sunset`) | No (default: `default`) |
 
 #### Available Styles
 | Style | Description |
