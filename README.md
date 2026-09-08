@@ -11,6 +11,7 @@ Currently supports COROS-exported `.fit` files.
 - Generate yearly summary images with all activities
 - Multiple color themes for customization
 - Supports running, trail running, hiking, and other activities
+- Display the activity area using reverse geocoded location data
 
 ## Project Structure
 
@@ -18,6 +19,7 @@ Currently supports COROS-exported `.fit` files.
 track2image/
 ├── process.py      # Process .fit files and organize by year
 ├── generate.py     # Generate track images and yearly summaries
+├── exceptional_areas.txt # Areas whose names should not be displayed
 ├── styles.py       # Color style definitions
 ├── requirements.txt
 ├── data/           # Input folder for .fit files
@@ -105,6 +107,12 @@ python generate.py 2025 --style sunset
 # Generate images for 2024 with light theme
 python generate.py 2024 --style light
 ```
+
+### Area Labels
+
+Each track image displays the most common `admin1` area returned by `reverse_geocoder` for the first five GPS positions. Trailing `Shi` and `Sheng` suffixes are removed from area names.
+
+Areas listed in `exceptional_areas.txt` are not displayed. Add one area name per line; blank lines and lines beginning with `#` are ignored. The file contains `Shanghai` by default.
 
 ## Output
 

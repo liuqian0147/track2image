@@ -2,3 +2,4 @@ garmin-fit-sdk
 numpy
 pandas
 pillow
+reverse_geocoder

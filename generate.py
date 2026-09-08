@@ -7,7 +7,10 @@ from datetime import datetime, timezone, timedelta
 import datetime
 import math
 import argparse
+from collections import Counter
 from styles import styles
+import reverse_geocoder as rg
+
 
 base_path = './tracks'
 output_path = './output'
@@ -21,6 +24,44 @@ line_color = '#0A0C12'
 altitude_color = '#747D9C'
 
 default_font = "./fonts/OpenSans-ExtraBold.ttf"
+geocoder_sample_size = 5
+fit_semicircles_to_degrees = 180 / 2**31
+exceptional_areas_file = os.path.join(os.path.dirname(__file__), 'exceptional_areas.txt')
+
+
+def load_exceptional_areas():
+    try:
+        with open(exceptional_areas_file, 'rt') as file:
+            return {line.strip() for line in file if line.strip() and not line.startswith('#')}
+    except OSError as e:
+        print(f"Warning: Unable to read exceptional areas file. {e}")
+        return set()
+
+
+exceptional_areas = load_exceptional_areas()
+
+def get_track_city(df):
+    """Return the most common admin1 area from the first few track positions."""
+    positions = df[['position_lat', 'position_long']].dropna().head(geocoder_sample_size)
+    if positions.empty:
+        return None
+
+    try:
+        positions = positions.astype(float) * fit_semicircles_to_degrees
+        results = rg.search([tuple(position) for position in positions.to_numpy()])
+        areas = []
+        for result in results:
+            area = result.get('admin1', '')
+            if area.endswith(' Shi'):
+                area = area[:-4].strip()
+            elif area.endswith(' Sheng'):
+                area = area[:-6].strip()
+            if area:
+                areas.append(area)
+        return Counter(areas).most_common(1)[0][0] if areas else None
+    except Exception as e:
+        print(f"Warning: Unable to determine track city. {e}")
+        return None
 
 def gen_track_image (filename, colors):
     try:
@@ -76,6 +117,7 @@ def gen_track_image (filename, colors):
         
         #clean up data
         df = df.dropna()
+        track_city = get_track_city(df)
 
         width = img_size[0] - 2 * border
         height = img_size[1] - 2 * border
@@ -116,7 +158,6 @@ def gen_track_image (filename, colors):
 
         #draw track
         df_track = df.dropna(subset=['position_lat', 'position_long']) 
-
         #load tracks
         xy = [tuple(row) for row in df_track[['position_long','position_lat']].to_numpy()]
         if not xy:
@@ -151,6 +192,18 @@ def gen_track_image (filename, colors):
             print(f"Warning: Unable to draw info text for {filename}. Missing data: {e}")
         except OSError as e:
             print(f"Warning: Unable to load font for info text in {filename}. {e}")
+
+        if track_city and track_city not in exceptional_areas:
+            try:
+                draw.text(
+                    (img_size[0] / 2, img_size[1] - 8),
+                    "@" + track_city,
+                    font=ImageFont.truetype(default_font, 15),
+                    fill=info_color,
+                    anchor='ms'
+                )
+            except OSError as e:
+                print(f"Warning: Unable to load font for city text in {filename}. {e}")
 
         ##############
         # draw day
